@@ -18,6 +18,14 @@
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
 
+#define SETUP_OK 0
+#define READ_OK 0
+#define WRITE_OK 0
+#define FAILED_TO_OPEN_THE_I2C_BUS 1
+#define FAILED_TO_AQUIRE_BUS_ACCESS_AND_OR_TALK_TO_SLAVE 2
+#define FAILED_TO_WRITE_TO_THE_I2C_BUS 3
+#define FAILED_TO_READ_FROM_THE_I2C_BUS 4
+
 typedef struct { 
      char *bus_name;
      int address;
@@ -26,6 +34,6 @@ typedef struct {
      char data[1];
 } i2c_device;
 
-void device_setup(i2c_device *i2cdev); 
-void device_read(i2c_device *i2cdev);
-void device_write(i2c_device *i2cdev);                   
+int device_setup(i2c_device *i2cdev); 
+int device_read(i2c_device *i2cdev);
+int device_write(i2c_device *i2cdev);                   

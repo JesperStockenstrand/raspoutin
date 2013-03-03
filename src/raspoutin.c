@@ -22,31 +22,36 @@
 
 #include "raspoutin.h"
 
-void device_setup(i2c_device *i2cdev) {
+int device_setup(i2c_device *i2cdev) {
     if (((*i2cdev).device = open((*i2cdev).bus_name, O_RDWR)) < 0) {
         fprintf(stderr, "Failed to open the %s\n", (*i2cdev).bus_name);
         (*i2cdev).connected = 0;
-        return;
+        return FAILED_TO_OPEN_THE_I2C_BUS;
     }
 	
     if (ioctl((*i2cdev).device, I2C_SLAVE, (*i2cdev).address) < 0) {
         fprintf(stderr, "Failed to acquire bus access and/or talk to slave.\n");
         (*i2cdev).connected = 0;
-        return;
+        return FAILED_TO_AQUIRE_BUS_ACCESS_AND_OR_TALK_TO_SLAVE;
     }
     (*i2cdev).connected = 1;
+    return SETUP_OK;
 }
 
-void device_read(i2c_device *i2cdev) {
+int device_read(i2c_device *i2cdev) {
     if (read((*i2cdev).device, (*i2cdev).data, 1) != 1) {
         fprintf(stderr, "Error reading from i2c\n");
         (*i2cdev).connected = 0;
+        return FAILED_TO_READ_FROM_THE_I2C_BUS;
     }
+    return READ_OK;
 }
 
-void device_write(i2c_device *i2cdev) {
+int device_write(i2c_device *i2cdev) {
     if (write((*i2cdev).device, (*i2cdev).data, 1) != 1) {
         fprintf(stderr, "Failed to write to the i2c bus.\n");
         (*i2cdev).connected = 0;
+        return FAILED_TO_WRITE_TO_THE_I2C_BUS;
     }
+    return WRITE_OK;
 }
